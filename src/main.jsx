@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import GillionHomepage from './GillionHomepage.jsx';
-import index.css from './index.css';
+import "./index.css";
+
 // Note: intentionally NOT wrapped in <React.StrictMode>.
 // GillionHomepage's useEffect does one-time, non-idempotent DOM work
 // (cloning hero slides, appending trend cards, appending dot buttons).
