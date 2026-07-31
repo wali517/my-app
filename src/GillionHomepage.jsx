@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import LogoNav from './assets/Logo_black.png';
 
 /**
  * Gillion — Lifestyle homepage
@@ -13,7 +14,7 @@ export default function GillionHomepage() {
   const [megaPage, setMegaPage] = useState(0);
   const megaVisible = 4;
 
-  function selectMegaTab(tab){
+  function selectMegaTab(tab) {
     setMegaTab(tab);
     setMegaPage(0);
   }
@@ -58,30 +59,30 @@ export default function GillionHomepage() {
     // Original page script, unchanged, run once after the DOM mounts
     // ---------------------------------------------------------------
 
-      /* ---------- guard against double-initialization ----------
-         (React StrictMode's dev-only double effect invoke, or Vite
-         HMR re-running this effect on save, would otherwise re-run
-         all the DOM mutations below — cloning hero slides again,
-         appending duplicate trend cards, duplicate dot buttons, and
-         duplicate event listeners.) */
-      const trendGrid = document.getElementById('trendGrid');
-      if (trendGrid.dataset.hydrated === 'true') {
-        return () => {
-          document.head.removeChild(preconnect);
-          document.head.removeChild(fontLink);
-        };
-      }
-      trendGrid.dataset.hydrated = 'true';
+    /* ---------- guard against double-initialization ----------
+       (React StrictMode's dev-only double effect invoke, or Vite
+       HMR re-running this effect on save, would otherwise re-run
+       all the DOM mutations below — cloning hero slides again,
+       appending duplicate trend cards, duplicate dot buttons, and
+       duplicate event listeners.) */
+    const trendGrid = document.getElementById('trendGrid');
+    if (trendGrid.dataset.hydrated === 'true') {
+      return () => {
+        document.head.removeChild(preconnect);
+        document.head.removeChild(fontLink);
+      };
+    }
+    trendGrid.dataset.hydrated = 'true';
 
-      /* ---------- data for trending & sample posts ---------- */
-      const trending = [
-        {cat:"People, Style", title:"The Truth Is You Are Not The Only Person Concerned About Appearance", img:"https://images.pexels.com/photos/30651300/pexels-photo-30651300.jpeg?auto=compress&cs=tinysrgb&w=1200", meta:"2 min read"},
-        {cat:"News, Style", title:"Fabric Textile Trends In 2017, What To Look Forward/Expect", img:"https://images.pexels.com/photos/8421662/pexels-photo-8421662.jpeg?auto=compress&cs=tinysrgb&w=1200", meta:"1 min read"},
-        {cat:"Health, Lifestyle", title:"Health Tips And Benefits Of Healthy Lifestyle You Should Consider", img:"https://images.pexels.com/photos/7994388/pexels-photo-7994388.jpeg?auto=compress&cs=tinysrgb&w=1200", meta:"1 min read"},
-        {cat:"Design, Style", title:"New Glasses Trends That Will Come In Late 2017", img:"https://images.pexels.com/photos/29409173/pexels-photo-29409173.jpeg?auto=compress&cs=tinysrgb&w=1200", meta:"1 min read"}
-      ];
-      trending.forEach(t=>{
-        trendGrid.insertAdjacentHTML('beforeend', `
+    /* ---------- data for trending & sample posts ---------- */
+    const trending = [
+      { cat: "People, Style", title: "The Truth Is You Are Not The Only Person Concerned About Appearance", img: "https://images.pexels.com/photos/30651300/pexels-photo-30651300.jpeg?auto=compress&cs=tinysrgb&w=1200", meta: "2 min read" },
+      { cat: "News, Style", title: "Fabric Textile Trends In 2017, What To Look Forward/Expect", img: "https://images.pexels.com/photos/8421662/pexels-photo-8421662.jpeg?auto=compress&cs=tinysrgb&w=1200", meta: "1 min read" },
+      { cat: "Health, Lifestyle", title: "Health Tips And Benefits Of Healthy Lifestyle You Should Consider", img: "https://images.pexels.com/photos/7994388/pexels-photo-7994388.jpeg?auto=compress&cs=tinysrgb&w=1200", meta: "1 min read" },
+      { cat: "Design, Style", title: "New Glasses Trends That Will Come In Late 2017", img: "https://images.pexels.com/photos/29409173/pexels-photo-29409173.jpeg?auto=compress&cs=tinysrgb&w=1200", meta: "1 min read" }
+    ];
+    trending.forEach(t => {
+      trendGrid.insertAdjacentHTML('beforeend', `
           <article class="trend-card">
             <a href="#" class="media">
               <div class="bg-img" role="img" aria-label="${t.title}" style="background-image:url('${t.img}');"></div>
@@ -94,226 +95,226 @@ export default function GillionHomepage() {
               <div class="meta"><span>Gillion, 9 years ago</span><span>1 min read</span></div>
             </div>
           </article>`);
-      });
+    });
 
-      /* ---------- generic slider factory ---------- */
-      function makeSlider(container, {interval=null, onChange=null} = {}){
-        const slides = container.querySelectorAll(':scope > .slide');
-        let i = 0;
-        function show(idx){
-          slides[i].classList.remove('active');
-          i = (idx + slides.length) % slides.length;
-          slides[i].classList.add('active');
-          if(onChange) onChange(i, slides[i]);
-        }
-        if(interval) setInterval(()=>show(i+1), interval);
-        return { next:()=>show(i+1), prev:()=>show(i-1), get index(){return i;}, count:slides.length };
+    /* ---------- generic slider factory ---------- */
+    function makeSlider(container, { interval = null, onChange = null } = {}) {
+      const slides = container.querySelectorAll(':scope > .slide');
+      let i = 0;
+      function show(idx) {
+        slides[i].classList.remove('active');
+        i = (idx + slides.length) % slides.length;
+        slides[i].classList.add('active');
+        if (onChange) onChange(i, slides[i]);
       }
+      if (interval) setInterval(() => show(i + 1), interval);
+      return { next: () => show(i + 1), prev: () => show(i - 1), get index() { return i; }, count: slides.length };
+    }
 
-      /* ---------- hero banner (infinite loop, seamless both directions) ---------- */
-      const heroTrack = document.getElementById('heroBannerTrack');
-      const heroPrevBtn = document.getElementById('heroPrev');
-      const heroNextBtn = document.getElementById('heroNext');
-      const heroRealSets = [...heroTrack.querySelectorAll('.hero-set')];
-      const heroRealCount = heroRealSets.length;
+    /* ---------- hero banner (infinite loop, seamless both directions) ---------- */
+    const heroTrack = document.getElementById('heroBannerTrack');
+    const heroPrevBtn = document.getElementById('heroPrev');
+    const heroNextBtn = document.getElementById('heroNext');
+    const heroRealSets = [...heroTrack.querySelectorAll('.hero-set')];
+    const heroRealCount = heroRealSets.length;
 
-      // clone first & last set for a seamless infinite loop
-      const heroFirstClone = heroRealSets[0].cloneNode(true);
-      const heroLastClone = heroRealSets[heroRealCount - 1].cloneNode(true);
-      heroTrack.appendChild(heroFirstClone);
-      heroTrack.insertBefore(heroLastClone, heroRealSets[0]);
+    // clone first & last set for a seamless infinite loop
+    const heroFirstClone = heroRealSets[0].cloneNode(true);
+    const heroLastClone = heroRealSets[heroRealCount - 1].cloneNode(true);
+    heroTrack.appendChild(heroFirstClone);
+    heroTrack.insertBefore(heroLastClone, heroRealSets[0]);
 
-      let heroPos = 1; // index into track including the two clones
-      let heroAnimating = false;
+    let heroPos = 1; // index into track including the two clones
+    let heroAnimating = false;
+    heroTrack.style.transform = `translateX(-${heroPos * 100}%)`;
+
+    function setHeroTransition(on) {
+      heroTrack.style.transition = on ? 'transform .55s cubic-bezier(.4,0,.2,1)' : 'none';
+    }
+    function moveHero(dir) {
+      if (heroAnimating) return;
+      heroAnimating = true;
+      setHeroTransition(true);
+      heroPos += dir;
       heroTrack.style.transform = `translateX(-${heroPos * 100}%)`;
-
-      function setHeroTransition(on){
-        heroTrack.style.transition = on ? 'transform .55s cubic-bezier(.4,0,.2,1)' : 'none';
-      }
-      function moveHero(dir){
-        if(heroAnimating) return;
-        heroAnimating = true;
-        setHeroTransition(true);
-        heroPos += dir;
+    }
+    heroTrack.addEventListener('transitionend', () => {
+      if (heroPos === heroRealCount + 1) { // landed on cloned first -> snap to real first
+        setHeroTransition(false);
+        heroPos = 1;
+        heroTrack.style.transform = `translateX(-${heroPos * 100}%)`;
+      } else if (heroPos === 0) { // landed on cloned last -> snap to real last
+        setHeroTransition(false);
+        heroPos = heroRealCount;
         heroTrack.style.transform = `translateX(-${heroPos * 100}%)`;
       }
-      heroTrack.addEventListener('transitionend', ()=>{
-        if(heroPos === heroRealCount + 1){ // landed on cloned first -> snap to real first
-          setHeroTransition(false);
-          heroPos = 1;
-          heroTrack.style.transform = `translateX(-${heroPos * 100}%)`;
-        } else if(heroPos === 0){ // landed on cloned last -> snap to real last
-          setHeroTransition(false);
-          heroPos = heroRealCount;
-          heroTrack.style.transform = `translateX(-${heroPos * 100}%)`;
-        }
-        heroAnimating = false;
-      });
-      heroNextBtn.addEventListener('click', ()=> moveHero(1));
-      heroPrevBtn.addEventListener('click', ()=> moveHero(-1));
+      heroAnimating = false;
+    });
+    heroNextBtn.addEventListener('click', () => moveHero(1));
+    heroPrevBtn.addEventListener('click', () => moveHero(-1));
 
-      /* ---------- food slider ---------- */
-      const foodSlider = document.getElementById('foodSlider');
-      const foodDotsWrap = document.getElementById('foodDots');
-      const foodSlidesCount = foodSlider.querySelectorAll('.slide').length;
-      for(let k=0;k<foodSlidesCount;k++){
-        const b = document.createElement('button');
-        if(k===0) b.classList.add('active');
-        b.addEventListener('click', ()=>foodGo(k));
-        foodDotsWrap.appendChild(b);
+    /* ---------- food slider ---------- */
+    const foodSlider = document.getElementById('foodSlider');
+    const foodDotsWrap = document.getElementById('foodDots');
+    const foodSlidesCount = foodSlider.querySelectorAll('.slide').length;
+    for (let k = 0; k < foodSlidesCount; k++) {
+      const b = document.createElement('button');
+      if (k === 0) b.classList.add('active');
+      b.addEventListener('click', () => foodGo(k));
+      foodDotsWrap.appendChild(b);
+    }
+    function updateFoodDots(idx) {
+      [...foodDotsWrap.children].forEach((b, k) => b.classList.toggle('active', k === idx));
+    }
+    const foodCtrl = makeSlider(foodSlider, {
+      onChange: (idx, el) => {
+        document.getElementById('foodCat').textContent = el.dataset.cat;
+        document.getElementById('foodTitle').innerHTML = el.dataset.title;
+        updateFoodDots(idx);
       }
-      function updateFoodDots(idx){
-        [...foodDotsWrap.children].forEach((b,k)=>b.classList.toggle('active', k===idx));
-      }
-      const foodCtrl = makeSlider(foodSlider, {
-        onChange:(idx, el)=>{
-          document.getElementById('foodCat').textContent = el.dataset.cat;
-          document.getElementById('foodTitle').innerHTML = el.dataset.title;
-          updateFoodDots(idx);
-        }
-      });
-      function foodGo(idx){
-        const diff = idx - foodCtrl.index;
-        if(diff>0){ for(let n=0;n<diff;n++) foodCtrl.next(); }
-        else if(diff<0){ for(let n=0;n<-diff;n++) foodCtrl.prev(); }
-      }
+    });
+    function foodGo(idx) {
+      const diff = idx - foodCtrl.index;
+      if (diff > 0) { for (let n = 0; n < diff; n++) foodCtrl.next(); }
+      else if (diff < 0) { for (let n = 0; n < -diff; n++) foodCtrl.prev(); }
+    }
 
-      /* ---------- latest-post big slider ---------- */
-      const lpCtrl = makeSlider(document.getElementById('lpSlider'), {
-        onChange:(idx)=>{
-          document.getElementById('lpSlideCounter').textContent = (idx+1)+'/'+lpCtrl.count;
-        }
-      });
-      document.getElementById('lpNext').addEventListener('click', ()=>lpCtrl.next());
-      document.getElementById('lpPrev').addEventListener('click', ()=>lpCtrl.prev());
+    /* ---------- latest-post big slider ---------- */
+    const lpCtrl = makeSlider(document.getElementById('lpSlider'), {
+      onChange: (idx) => {
+        document.getElementById('lpSlideCounter').textContent = (idx + 1) + '/' + lpCtrl.count;
+      }
+    });
+    document.getElementById('lpNext').addEventListener('click', () => lpCtrl.next());
+    document.getElementById('lpPrev').addEventListener('click', () => lpCtrl.prev());
 
-      /* ---------- footer trending slider (slick-style slide, directional) ---------- */
-      const ftTrack = document.getElementById('ftTrack');
-      const ftSlides = ftTrack.querySelectorAll('.slide');
-      const ftPrevBtn = document.getElementById('ftPrev');
-      const ftNextBtn = document.getElementById('ftNext');
-      let ftIdx = 0;
-      function ftUpdateButtons(){
-        ftPrevBtn.disabled = ftIdx === 0;
-        ftNextBtn.disabled = ftIdx === ftSlides.length - 1;
-      }
-      function ftGo(idx){
-        ftIdx = Math.max(0, Math.min(idx, ftSlides.length - 1));
-        ftTrack.style.transform = `translateX(-${ftIdx * 100}%)`;
-        ftUpdateButtons();
-      }
+    /* ---------- footer trending slider (slick-style slide, directional) ---------- */
+    const ftTrack = document.getElementById('ftTrack');
+    const ftSlides = ftTrack.querySelectorAll('.slide');
+    const ftPrevBtn = document.getElementById('ftPrev');
+    const ftNextBtn = document.getElementById('ftNext');
+    let ftIdx = 0;
+    function ftUpdateButtons() {
+      ftPrevBtn.disabled = ftIdx === 0;
+      ftNextBtn.disabled = ftIdx === ftSlides.length - 1;
+    }
+    function ftGo(idx) {
+      ftIdx = Math.max(0, Math.min(idx, ftSlides.length - 1));
+      ftTrack.style.transform = `translateX(-${ftIdx * 100}%)`;
       ftUpdateButtons();
-      ftNextBtn.addEventListener('click', ()=>ftGo(ftIdx+1));
-      ftPrevBtn.addEventListener('click', ()=>ftGo(ftIdx-1));
-  
+    }
+    ftUpdateButtons();
+    ftNextBtn.addEventListener('click', () => ftGo(ftIdx + 1));
+    ftPrevBtn.addEventListener('click', () => ftGo(ftIdx - 1));
 
-      /* ---------- header interactions ---------- */
-      const searchBtn = document.getElementById('searchBtn');
-      const searchOverlay = document.getElementById('searchOverlay');
-      const searchClose = document.getElementById('searchClose');
-      searchBtn.addEventListener('click', ()=>{
-        searchOverlay.classList.add('show');
-        setTimeout(()=>document.getElementById('searchInput').focus(), 150);
+
+    /* ---------- header interactions ---------- */
+    const searchBtn = document.getElementById('searchBtn');
+    const searchOverlay = document.getElementById('searchOverlay');
+    const searchClose = document.getElementById('searchClose');
+    searchBtn.addEventListener('click', () => {
+      searchOverlay.classList.add('show');
+      setTimeout(() => document.getElementById('searchInput').focus(), 150);
+    });
+    searchClose.addEventListener('click', () => searchOverlay.classList.remove('show'));
+    searchOverlay.addEventListener('click', e => { if (e.target === searchOverlay) searchOverlay.classList.remove('show'); });
+
+    const subBtn = document.getElementById('subscribeBtn');
+    const subPanel = document.getElementById('subPanel');
+    const subBackdrop = document.getElementById('subBackdrop');
+    const subClose = document.getElementById('subClose');
+    function openSub() { subPanel.classList.add('show'); subBackdrop.classList.add('show'); }
+    function closeSub() { subPanel.classList.remove('show'); subBackdrop.classList.remove('show'); }
+    subBtn.addEventListener('click', openSub);
+    subClose.addEventListener('click', closeSub);
+    subBackdrop.addEventListener('click', closeSub);
+
+    const loginBtn = document.getElementById('loginBtn');
+    const loginMsg = document.getElementById('loginMsg');
+    loginBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      loginMsg.classList.toggle('show');
+    });
+    document.addEventListener('click', (e) => {
+      if (!loginMsg.contains(e.target) && e.target !== loginBtn) loginMsg.classList.remove('show');
+    });
+
+    /* ---------- mobile sidebar nav ---------- */
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileSidebar = document.getElementById('mobileSidebar');
+    const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+    const sidebarClose = document.getElementById('sidebarClose');
+
+    function openSidebar() {
+      mobileSidebar.classList.add('show');
+      sidebarBackdrop.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+      mobileSidebar.classList.remove('show');
+      sidebarBackdrop.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    menuToggle.addEventListener('click', openSidebar);
+    sidebarClose.addEventListener('click', closeSidebar);
+    sidebarBackdrop.addEventListener('click', closeSidebar);
+
+    document.querySelectorAll('.side-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.side-item');
+        const wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.side-item.open').forEach(el => { if (el !== item) el.classList.remove('open'); });
+        item.classList.toggle('open', !wasOpen);
       });
-      searchClose.addEventListener('click', ()=>searchOverlay.classList.remove('show'));
-      searchOverlay.addEventListener('click', e=>{ if(e.target===searchOverlay) searchOverlay.classList.remove('show'); });
+    });
 
-      const subBtn = document.getElementById('subscribeBtn');
-      const subPanel = document.getElementById('subPanel');
-      const subBackdrop = document.getElementById('subBackdrop');
-      const subClose = document.getElementById('subClose');
-      function openSub(){ subPanel.classList.add('show'); subBackdrop.classList.add('show'); }
-      function closeSub(){ subPanel.classList.remove('show'); subBackdrop.classList.remove('show'); }
-      subBtn.addEventListener('click', openSub);
-      subClose.addEventListener('click', closeSub);
-      subBackdrop.addEventListener('click', closeSub);
+    /* close sidebar automatically if window is resized back to desktop */
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 900) closeSidebar();
+    });
 
-      const loginBtn = document.getElementById('loginBtn');
-      const loginMsg = document.getElementById('loginMsg');
-      loginBtn.addEventListener('click', (e)=>{
-        e.stopPropagation();
-        loginMsg.classList.toggle('show');
-      });
-      document.addEventListener('click', (e)=>{
-        if(!loginMsg.contains(e.target) && e.target!==loginBtn) loginMsg.classList.remove('show');
-      });
-
-      /* ---------- mobile sidebar nav ---------- */
-      const menuToggle = document.getElementById('menuToggle');
-      const mobileSidebar = document.getElementById('mobileSidebar');
-      const sidebarBackdrop = document.getElementById('sidebarBackdrop');
-      const sidebarClose = document.getElementById('sidebarClose');
-
-      function openSidebar(){
-        mobileSidebar.classList.add('show');
-        sidebarBackdrop.classList.add('show');
-        document.body.style.overflow = 'hidden';
-      }
-      function closeSidebar(){
-        mobileSidebar.classList.remove('show');
-        sidebarBackdrop.classList.remove('show');
-        document.body.style.overflow = '';
-      }
-      menuToggle.addEventListener('click', openSidebar);
-      sidebarClose.addEventListener('click', closeSidebar);
-      sidebarBackdrop.addEventListener('click', closeSidebar);
-
-      document.querySelectorAll('.side-toggle').forEach(btn=>{
-        btn.addEventListener('click', ()=>{
-          const item = btn.closest('.side-item');
-          const wasOpen = item.classList.contains('open');
-          document.querySelectorAll('.side-item.open').forEach(el=>{ if(el!==item) el.classList.remove('open'); });
-          item.classList.toggle('open', !wasOpen);
-        });
-      });
-
-      /* close sidebar automatically if window is resized back to desktop */
-      window.addEventListener('resize', ()=>{
-        if(window.innerWidth > 900) closeSidebar();
-      });
-
-      /* ---------- sticky nav ---------- */
-      const nav = document.getElementById('mainNav');
-      const headerEl = document.querySelector('.site-header');
-      let navOffset = null;
-      function updateNavBottom(){
-        document.documentElement.style.setProperty('--nav-bottom', nav.getBoundingClientRect().bottom + 'px');
+    /* ---------- sticky nav ---------- */
+    const nav = document.getElementById('mainNav');
+    const headerEl = document.querySelector('.site-header');
+    let navOffset = null;
+    function updateNavBottom() {
+      document.documentElement.style.setProperty('--nav-bottom', nav.getBoundingClientRect().bottom + 'px');
+    }
+    updateNavBottom();
+    window.addEventListener('scroll', () => {
+      if (navOffset === null) navOffset = nav.offsetTop;
+      if (window.scrollY > navOffset) {
+        nav.classList.add('stuck');
+        document.body.style.paddingTop = nav.offsetHeight + 'px';
+      } else {
+        nav.classList.remove('stuck');
+        document.body.style.paddingTop = 0;
       }
       updateNavBottom();
-      window.addEventListener('scroll', ()=>{
-        if(navOffset===null) navOffset = nav.offsetTop;
-        if(window.scrollY > navOffset){
-          nav.classList.add('stuck');
-          document.body.style.paddingTop = nav.offsetHeight + 'px';
-        } else {
-          nav.classList.remove('stuck');
-          document.body.style.paddingTop = 0;
-        }
-        updateNavBottom();
-      });
-      window.addEventListener('resize', updateNavBottom);
+    });
+    window.addEventListener('resize', updateNavBottom);
 
-      /* ---------- footer tabs ---------- */
-      const tabLatest = document.getElementById('tabLatest');
-      const tabPopular = document.getElementById('tabPopular');
-      const postsLatest = document.getElementById('ftPostsLatest');
-      const postsPopular = document.getElementById('ftPostsPopular');
-      tabLatest.addEventListener('click', ()=>{
-        tabLatest.classList.add('active'); tabPopular.classList.remove('active');
-        postsLatest.style.display='block'; postsPopular.style.display='none';
-      });
-      tabPopular.addEventListener('click', ()=>{
-        tabPopular.classList.add('active'); tabLatest.classList.remove('active');
-        postsPopular.style.display='block'; postsLatest.style.display='none';
-      });
+    /* ---------- footer tabs ---------- */
+    const tabLatest = document.getElementById('tabLatest');
+    const tabPopular = document.getElementById('tabPopular');
+    const postsLatest = document.getElementById('ftPostsLatest');
+    const postsPopular = document.getElementById('ftPostsPopular');
+    tabLatest.addEventListener('click', () => {
+      tabLatest.classList.add('active'); tabPopular.classList.remove('active');
+      postsLatest.style.display = 'block'; postsPopular.style.display = 'none';
+    });
+    tabPopular.addEventListener('click', () => {
+      tabPopular.classList.add('active'); tabLatest.classList.remove('active');
+      postsPopular.style.display = 'block'; postsLatest.style.display = 'none';
+    });
 
-      /* ---------- categories show more ---------- */
-      const catList = document.getElementById('catList');
-      const showMoreCat = document.getElementById('showMoreCat');
-      showMoreCat.addEventListener('click', ()=>{
-        const expanded = catList.classList.toggle('expanded');
-        showMoreCat.textContent = expanded ? 'Show Less −' : 'Show More +';
-      });
+    /* ---------- categories show more ---------- */
+    const catList = document.getElementById('catList');
+    const showMoreCat = document.getElementById('showMoreCat');
+    showMoreCat.addEventListener('click', () => {
+      const expanded = catList.classList.toggle('expanded');
+      showMoreCat.textContent = expanded ? 'Show Less −' : 'Show More +';
+    });
 
 
     return () => {
@@ -856,14 +857,14 @@ export default function GillionHomepage() {
         <div className="wrap header-row">
           <div className="header-side left">
             <button className="icon-btn menu-toggle" id="menuToggle" aria-label="Open menu">
-              <svg className="icon" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+              <svg className="icon" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
             </button>
             <button className="icon-btn" id="searchBtn" aria-label="Search">
-              <svg className="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <svg className="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
             </button>
             <div className="share-wrap">
               <button className="icon-btn" aria-label="Share">
-                <svg className="icon" viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><line x1="8.3" y1="10.7" x2="15.7" y2="6.3"/><line x1="8.3" y1="13.3" x2="15.7" y2="17.7"/></svg>
+                <svg className="icon" viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5" /><circle cx="6" cy="12" r="2.5" /><circle cx="18" cy="19" r="2.5" /><line x1="8.3" y1="10.7" x2="15.7" y2="6.3" /><line x1="8.3" y1="13.3" x2="15.7" y2="17.7" /></svg>
               </button>
               <div className="share-drop">
                 <a href="#" title="Facebook">f</a>
@@ -874,15 +875,15 @@ export default function GillionHomepage() {
             </div>
           </div>
 
-          <div className="logo"><img src="Logo_black.png" alt="LOGO" /></div>
+          <div className="logo"><img src={LogoNav} alt="LOGO" /></div>
 
           <div className="header-side right">
             <button className="icon-btn" id="subscribeBtn" title="Subscribe" aria-label="Subscribe">
-              <svg className="icon" viewBox="0 0 24 24"><path d="M13 2 3 14h7l-1 8 11-14h-7l1-6z"/></svg>
+              <svg className="icon" viewBox="0 0 24 24"><path d="M13 2 3 14h7l-1 8 11-14h-7l1-6z" /></svg>
             </button>
             <div className="login-wrap">
-              <button className="icon-btn" id="loginBtn" title="Saved" aria-label="Saved" style={{position: 'relative'}}>
-                <svg className="icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+              <button className="icon-btn" id="loginBtn" title="Saved" aria-label="Saved" style={{ position: 'relative' }}>
+                <svg className="icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z" /></svg>
                 <span className="save-count">0</span>
               </button>
               <div className="login-msg" id="loginMsg">
@@ -897,20 +898,20 @@ export default function GillionHomepage() {
         <div className="wrap nav-inner">
           <div className="nav-item"><a href="#">Home</a><span className="nav-dots">⋮</span>
             <div className="nav-drop">
-               <a href="#">Gillion Showcase</a>
-                  <a href="#">journal</a>
-                  <a href="#">News</a>
-                  <a href="#">Magazine</a>
-                  <a href="#">Shop</a>
-                  <a href="#">Gizmo News</a>
-                  <a href="#">Travel</a>
-                  <a href="#">Fashion</a>
-                  <a href="#">Clean</a>
-      <a href="#">Personal</a>
-      <a href="#">Foodie</a>
-      <a href="#">Tech</a>
-      <a href="#">Lifestyle</a> 
-      <a href="#">Card Style</a>
+              <a href="#">Gillion Showcase</a>
+              <a href="#">journal</a>
+              <a href="#">News</a>
+              <a href="#">Magazine</a>
+              <a href="#">Shop</a>
+              <a href="#">Gizmo News</a>
+              <a href="#">Travel</a>
+              <a href="#">Fashion</a>
+              <a href="#">Clean</a>
+              <a href="#">Personal</a>
+              <a href="#">Foodie</a>
+              <a href="#">Tech</a>
+              <a href="#">Lifestyle</a>
+              <a href="#">Card Style</a>
             </div>
           </div>
           <div className="nav-item has-alert"><a href="#">Features</a><span className="nav-dots">⋮</span>
@@ -935,17 +936,17 @@ export default function GillionHomepage() {
           <div className="nav-item"><a href="#">Blog Styles</a><span className="nav-dots">⋮</span>
             <div className="nav-drop">
               <a href="#">Masonry Style</a>
-                  <a href="#">Masonry Card Style</a>
-                  <a href="#">Grid Style</a>
-                  <a href="#">Left style</a>
-                  <a href="#">Left Style(mini)</a>
-                  <a href="#">Left Style(large)</a>
-                  <a href="#">Mix Style</a>
-                  <a href="#">Mix Style(small)</a>
-                  <a href="#">Mix Style(large)</a>
-      <a href="#">Large Style</a>
-      <a href="#">Large Title Below Style</a>
-      <a href="#">Large Centered Style</a>
+              <a href="#">Masonry Card Style</a>
+              <a href="#">Grid Style</a>
+              <a href="#">Left style</a>
+              <a href="#">Left Style(mini)</a>
+              <a href="#">Left Style(large)</a>
+              <a href="#">Mix Style</a>
+              <a href="#">Mix Style(small)</a>
+              <a href="#">Mix Style(large)</a>
+              <a href="#">Large Style</a>
+              <a href="#">Large Title Below Style</a>
+              <a href="#">Large Centered Style</a>
 
             </div>
           </div>
@@ -980,7 +981,7 @@ export default function GillionHomepage() {
                       </a>
                       <h5><a href="#">{post.title}</a></h5>
                       <div className="meta">
-                        <svg className="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                        <svg className="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" /></svg>
                         <span>9 years ago</span>
                       </div>
                     </article>
@@ -1031,7 +1032,7 @@ export default function GillionHomepage() {
             <div className="side-row">
               <a href="#">Home</a>
               <button className="side-toggle" aria-label="Toggle submenu">
-                <svg className="icon" viewBox="0 0 24 24" style={{width: '14px', height: '14px'}}><polyline points="6 9 12 15 18 9"/></svg>
+                <svg className="icon" viewBox="0 0 24 24" style={{ width: '14px', height: '14px' }}><polyline points="6 9 12 15 18 9" /></svg>
               </button>
             </div>
             <div className="side-drop">
@@ -1055,7 +1056,7 @@ export default function GillionHomepage() {
             <div className="side-row">
               <a href="#">Features<span className="side-alert-dot"></span></a>
               <button className="side-toggle" aria-label="Toggle submenu">
-                <svg className="icon" viewBox="0 0 24 24" style={{width: '14px', height: '14px'}}><polyline points="6 9 12 15 18 9"/></svg>
+                <svg className="icon" viewBox="0 0 24 24" style={{ width: '14px', height: '14px' }}><polyline points="6 9 12 15 18 9" /></svg>
               </button>
             </div>
             <div className="side-drop">
@@ -1080,7 +1081,7 @@ export default function GillionHomepage() {
             <div className="side-row">
               <a href="#">Blog Styles</a>
               <button className="side-toggle" aria-label="Toggle submenu">
-                <svg className="icon" viewBox="0 0 24 24" style={{width: '14px', height: '14px'}}><polyline points="6 9 12 15 18 9"/></svg>
+                <svg className="icon" viewBox="0 0 24 24" style={{ width: '14px', height: '14px' }}><polyline points="6 9 12 15 18 9" /></svg>
               </button>
             </div>
             <div className="side-drop">
@@ -1102,7 +1103,7 @@ export default function GillionHomepage() {
             <div className="side-row">
               <a href="#">Mega Menu</a>
               <button className="side-toggle" aria-label="Toggle submenu">
-                <svg className="icon" viewBox="0 0 24 24" style={{width: '14px', height: '14px'}}><polyline points="6 9 12 15 18 9"/></svg>
+                <svg className="icon" viewBox="0 0 24 24" style={{ width: '14px', height: '14px' }}><polyline points="6 9 12 15 18 9" /></svg>
               </button>
             </div>
             <div className="side-drop">
@@ -1114,7 +1115,7 @@ export default function GillionHomepage() {
             <div className="side-row">
               <a href="#">Shop<span className="side-alert-dot"></span></a>
               <button className="side-toggle" aria-label="Toggle submenu">
-                <svg className="icon" viewBox="0 0 24 24" style={{width: '14px', height: '14px'}}><polyline points="6 9 12 15 18 9"/></svg>
+                <svg className="icon" viewBox="0 0 24 24" style={{ width: '14px', height: '14px' }}><polyline points="6 9 12 15 18 9" /></svg>
               </button>
             </div>
             <div className="side-drop">
@@ -1133,7 +1134,7 @@ export default function GillionHomepage() {
       {/* search overlay */}
       <div className="search-overlay" id="searchOverlay">
         <div className="search-box">
-          <svg className="icon search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <svg className="icon search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
           <input type="text" placeholder="Enter a keyword to search…" id="searchInput" />
           <button className="search-close" id="searchClose">✕</button>
         </div>
@@ -1150,7 +1151,7 @@ export default function GillionHomepage() {
       </div>
 
       {/* ============ HERO ============ */}
-      <section style={{paddingTop: '6px'}}>
+      <section style={{ paddingTop: '6px' }}>
         <div className="wrap">
           <div className="hero-banner-wrap" id="heroBannerWrap">
             <div className="hero-banner-track" id="heroBannerTrack">
@@ -1164,7 +1165,7 @@ export default function GillionHomepage() {
                     <span className="eyebrow">Travel</span>
                     <h2>Adventure Time: Exploring The Beautiful Old City</h2>
                     <div className="meta">
-                      <span>Gillion, 9 years ago</span><svg className="icon m-icon hero-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+                      <span>Gillion, 9 years ago</span><svg className="icon m-icon hero-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z" /></svg>
                     </div>
                   </div>
                 </a>
@@ -1175,7 +1176,7 @@ export default function GillionHomepage() {
                     <div className="hero-cap small">
                       <span className="eyebrow">Design, Style</span>
                       <h3>Stylish Trends That Could Happen Faster Than You Think</h3>
-                      <div className="meta"><span>Gillion, 9 years ago</span><svg className="icon m-icon hero-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></div>
+                      <div className="meta"><span>Gillion, 9 years ago</span><svg className="icon m-icon hero-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z" /></svg></div>
                     </div>
                   </a>
                   <a href="#" className="hero-sub media">
@@ -1184,7 +1185,7 @@ export default function GillionHomepage() {
                     <div className="hero-cap small">
                       <span className="eyebrow">Lifestyle, Motivation</span>
                       <h3>Master Your Mind In 5 Minutes A Day</h3>
-                      <div className="meta"><span>Gillion, 9 years ago</span><svg className="icon m-icon hero-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></div>
+                      <div className="meta"><span>Gillion, 9 years ago</span><svg className="icon m-icon hero-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z" /></svg></div>
                     </div>
                   </a>
                 </div>
@@ -1198,7 +1199,7 @@ export default function GillionHomepage() {
                   <div className="hero-cap">
                     <span className="eyebrow">Style</span>
                     <h2>Gear Up! Accessories That Will Accent Your Style</h2>
-                    <div className="meta"><span>Gillion, 9 years ago</span><svg className="icon m-icon hero-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></div>
+                    <div className="meta"><span>Gillion, 9 years ago</span><svg className="icon m-icon hero-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z" /></svg></div>
                   </div>
                 </a>
                 <div className="hero-side">
@@ -1208,7 +1209,7 @@ export default function GillionHomepage() {
                     <div className="hero-cap small">
                       <span className="eyebrow">Food</span>
                       <h3>Simple Recipes To Try On A Lazy Weekend</h3>
-                      <div className="meta"><span>Gillion, 9 years ago</span><svg className="icon m-icon hero-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></div>
+                      <div className="meta"><span>Gillion, 9 years ago</span><svg className="icon m-icon hero-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z" /></svg></div>
                     </div>
                   </a>
                   <a href="#" className="hero-sub media">
@@ -1217,7 +1218,7 @@ export default function GillionHomepage() {
                     <div className="hero-cap small">
                       <span className="eyebrow">Beauty</span>
                       <h3>Skincare Habits Worth Sticking To This Year</h3>
-                      <div className="meta"><span>Gillion, 9 years ago</span><svg className="icon m-icon hero-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></div>
+                      <div className="meta"><span>Gillion, 9 years ago</span><svg className="icon m-icon hero-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z" /></svg></div>
                     </div>
                   </a>
                 </div>
@@ -1231,7 +1232,7 @@ export default function GillionHomepage() {
                   <div className="hero-cap">
                     <span className="eyebrow">Design</span>
                     <h2>Interiors That Balance Comfort With Character</h2>
-                    <div className="meta"><span>Gillion, 9 years ago</span><svg className="icon m-icon hero-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></div>
+                    <div className="meta"><span>Gillion, 9 years ago</span><svg className="icon m-icon hero-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z" /></svg></div>
                   </div>
                 </a>
                 <div className="hero-side">
@@ -1241,7 +1242,7 @@ export default function GillionHomepage() {
                     <div className="hero-cap small">
                       <span className="eyebrow">Fitness</span>
                       <h3>Quick Workouts For Impossibly Busy Mornings</h3>
-                      <div className="meta"><span>Gillion, 9 years ago</span><svg className="icon m-icon hero-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></div>
+                      <div className="meta"><span>Gillion, 9 years ago</span><svg className="icon m-icon hero-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z" /></svg></div>
                     </div>
                   </a>
                   <a href="#" className="hero-sub media">
@@ -1250,7 +1251,7 @@ export default function GillionHomepage() {
                     <div className="hero-cap small">
                       <span className="eyebrow">Culture</span>
                       <h3>Books Everyone Will Be Talking About This Fall</h3>
-                      <div className="meta"><span>Gillion, 9 years ago</span><svg className="icon m-icon hero-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></div>
+                      <div className="meta"><span>Gillion, 9 years ago</span><svg className="icon m-icon hero-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z" /></svg></div>
                     </div>
                   </a>
                 </div>
@@ -1260,10 +1261,10 @@ export default function GillionHomepage() {
 
             <div className="hero-nav">
               <button className="hero-arrow" id="heroPrev" aria-label="Previous slide">
-                <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" /></svg>
               </button>
               <button className="hero-arrow" id="heroNext" aria-label="Next slide">
-                <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" /></svg>
               </button>
             </div>
           </div>
@@ -1271,13 +1272,13 @@ export default function GillionHomepage() {
       </section>
 
       {/* ============ HOT TOPICS ============ */}
-      <section style={{paddingTop: '4px'}}>
+      <section style={{ paddingTop: '4px' }}>
         <div className="wrap">
           <span className="sec-title">Hot Topics</span>
           <div className="grid-2">
             <article className="topic-card">
               <a href="#" className="media">
-                <div className="bg-img" role="img" aria-label="Can You Really Find Friends on the Web?" style={{backgroundImage: 'url(\'https://images.pexels.com/photos/5483021/pexels-photo-5483021.jpeg?auto=compress&cs=tinysrgb&w=1200\')'}}></div>
+                <div className="bg-img" role="img" aria-label="Can You Really Find Friends on the Web?" style={{ backgroundImage: 'url(\'https://images.pexels.com/photos/5483021/pexels-photo-5483021.jpeg?auto=compress&cs=tinysrgb&w=1200\')' }}></div>
                 <div className="shade"></div>
                 <div className="dots"><span></span><span></span><span></span></div>
               </a>
@@ -1287,15 +1288,15 @@ export default function GillionHomepage() {
                 <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin mattis, erat at ultrices aliquam, turpis nisi rutrum erat, eu finibus felis nisl ultricies mi. Aliquam quis interdum dui. Vivamus mattis bibendum dolor, vel varius ante facilisi at. Maecenas molestie vestibulum…</p>
                 <div className="meta">
                   <span>Gillion, 9 years ago</span><span className="sep">|</span>
-                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>0</span><span className="sep">|</span>
-                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>1 min read</span><span className="sep">|</span>
-                  <svg className="icon m-icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>0</span><span className="sep">|</span>
+                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" /></svg>1 min read</span><span className="sep">|</span>
+                  <svg className="icon m-icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z" /></svg>
                 </div>
               </div>
             </article>
             <article className="topic-card">
               <a href="#" className="media">
-                <div className="bg-img" role="img" aria-label="Tips And Tricks How to Avoid Winter Depression" style={{backgroundImage: 'url(\'https://images.pexels.com/photos/6633296/pexels-photo-6633296.jpeg?auto=compress&cs=tinysrgb&w=1200\')'}}></div>
+                <div className="bg-img" role="img" aria-label="Tips And Tricks How to Avoid Winter Depression" style={{ backgroundImage: 'url(\'https://images.pexels.com/photos/6633296/pexels-photo-6633296.jpeg?auto=compress&cs=tinysrgb&w=1200\')' }}></div>
                 <div className="shade"></div>
                 <div className="dots"><span></span><span></span><span></span></div>
               </a>
@@ -1305,9 +1306,9 @@ export default function GillionHomepage() {
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque hendrerit fringilla enim, ut scelerisque dui. In hac habitasse platea dictumst. Etiam malesuada varius purus, ut consectetur dolor cursus quis. Vestibulum quis purus viverra, lobortis sapien quis, fringilla eros. Integer justo eros, sollicitudin vitae varius mattis,…</p>
                 <div className="meta">
                   <span>Gillion, 9 years ago</span><span className="sep">|</span>
-                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>2</span><span className="sep">|</span>
-                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>2 min read</span><span className="sep">|</span>
-                  <svg className="icon m-icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>2</span><span className="sep">|</span>
+                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" /></svg>2 min read</span><span className="sep">|</span>
+                  <svg className="icon m-icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z" /></svg>
                 </div>
               </div>
             </article>
@@ -1316,7 +1317,7 @@ export default function GillionHomepage() {
       </section>
 
       {/* ============ FOOD SLIDER ============ */}
-      <section style={{paddingBottom: '20px'}}>
+      <section style={{ paddingBottom: '20px' }}>
         <div className="wrap">
           <div className="food-slider" id="foodSlider">
             <div className="slide active" data-cat="Cook, Food" data-title="Heartwarming Dishes That Will Lighten Up Your Day &amp; Night"><img src="https://images.pexels.com/photos/7669757/pexels-photo-7669757.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="" /></div>
@@ -1329,9 +1330,9 @@ export default function GillionHomepage() {
               <div className="meta">
                 <img src="https://images.pexels.com/photos/5240450/pexels-photo-5240450.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="" className="author-avatar" />
                 <span>Gillion, 9 years ago</span><span className="sep">|</span>
-                <span><svg className="icon m-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>0</span><span className="sep">|</span>
-                <span><svg className="icon m-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>2 min read</span><span className="sep">|</span>
-                <svg className="icon m-icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+                <span><svg className="icon m-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>0</span><span className="sep">|</span>
+                <span><svg className="icon m-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" /></svg>2 min read</span><span className="sep">|</span>
+                <svg className="icon m-icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z" /></svg>
               </div>
             </div>
             <div className="food-dots" id="foodDots"></div>
@@ -1340,7 +1341,7 @@ export default function GillionHomepage() {
       </section>
 
       {/* ============ TRENDING ARTICLES ============ */}
-      <section style={{paddingTop: '20px', paddingBottom: '130px'}}>
+      <section style={{ paddingTop: '20px', paddingBottom: '130px' }}>
         <div className="wrap">
           <span className="sec-title">Trending Articles</span>
           <div className="grid-4" id="trendGrid"></div>
@@ -1348,10 +1349,10 @@ export default function GillionHomepage() {
       </section>
 
       {/* ============ SUBSCRIBE BANNER ============ */}
-      <section className="sub-banner" style={{paddingTop: '0', paddingBottom: '0'}}>
+      <section className="sub-banner" style={{ paddingTop: '0', paddingBottom: '0' }}>
         <div className="wrap">
           <h2>
-            <svg className="icon" viewBox="0 0 24 24" style={{width: '24px', height: '24px'}}><path d="M3 6h18v12H3z"/><path d="M3 6l9 7 9-7"/></svg>
+            <svg className="icon" viewBox="0 0 24 24" style={{ width: '24px', height: '24px' }}><path d="M3 6h18v12H3z" /><path d="M3 6l9 7 9-7" /></svg>
             Subscribe To Get Latest Updates
           </h2>
           <div className="sub-form">
@@ -1381,13 +1382,13 @@ export default function GillionHomepage() {
             </div>
             <div className="lp-side" id="lpSide">
               <span className="eyebrow" id="lpCat">Motivation</span>
-              <h4 id="lpTitle" style={{fontSize: '22px', margin: '10px 0 12px', lineHeight: '1.35'}}><a href="#"><b>Review:</b> Recent View On Things That Matter To Me The Most</a></h4>
-              <p id="lpExcerpt" style={{fontSize: '13px', color: 'var(--sub)', lineHeight: '1.8'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam laoreet, nunc et accumsan cursus, neque eros sodales lectus, in fermentum libero dui eu lacus. Nam lobortis facilisi sapien non aliquet. Aenean ligula urna, vehicula placerat sodales vel, tempor et orci. Donec molestie metus a sagittis…</p>
+              <h4 id="lpTitle" style={{ fontSize: '22px', margin: '10px 0 12px', lineHeight: '1.35' }}><a href="#"><b>Review:</b> Recent View On Things That Matter To Me The Most</a></h4>
+              <p id="lpExcerpt" style={{ fontSize: '13px', color: 'var(--sub)', lineHeight: '1.8' }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam laoreet, nunc et accumsan cursus, neque eros sodales lectus, in fermentum libero dui eu lacus. Nam lobortis facilisi sapien non aliquet. Aenean ligula urna, vehicula placerat sodales vel, tempor et orci. Donec molestie metus a sagittis…</p>
               <div className="meta">
                 <span>Gillion, 9 years ago</span><span className="sep">|</span>
-                <span><svg className="icon m-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span id="lpComments">2</span></span><span className="sep">|</span>
-                <span><svg className="icon m-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span id="lpTime">2 min read</span></span><span className="sep">|</span>
-                <svg className="icon m-icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+                <span><svg className="icon m-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg><span id="lpComments">2</span></span><span className="sep">|</span>
+                <span><svg className="icon m-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" /></svg><span id="lpTime">2 min read</span></span><span className="sep">|</span>
+                <svg className="icon m-icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z" /></svg>
               </div>
             </div>
 
@@ -1401,9 +1402,9 @@ export default function GillionHomepage() {
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam laoreet, nunc et accumsan cursus, neque eros sodales lectus, in fermentum libero dui eu lacus. Nam lobortis facilisi sapien non aliquet. Aenean ligula urna, vehicula placerat sodales vel, tempor et orci. Donec molestie metus a sagittis…</p>
                 <div className="meta">
                   <span>Gillion, 9 years ago</span><span className="sep">|</span>
-                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>0</span><span className="sep">|</span>
-                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>1 min read</span><span className="sep">|</span>
-                  <svg className="icon m-icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>0</span><span className="sep">|</span>
+                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" /></svg>1 min read</span><span className="sep">|</span>
+                  <svg className="icon m-icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z" /></svg>
                 </div>
               </div>
               <a href="#" className="media lr-media">
@@ -1425,9 +1426,9 @@ export default function GillionHomepage() {
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eget mi in nunc vulputate consectetur, Aliquam condimentum, felis ac convallis sodales, justo diam.</p>
                 <div className="meta">
                   <span>Gillion, 9 years ago</span><span className="sep">|</span>
-                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>0</span><span className="sep">|</span>
-                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>1 min read</span><span className="sep">|</span>
-                  <svg className="icon m-icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>0</span><span className="sep">|</span>
+                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" /></svg>1 min read</span><span className="sep">|</span>
+                  <svg className="icon m-icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z" /></svg>
                 </div>
               </div>
             </div>
@@ -1439,9 +1440,9 @@ export default function GillionHomepage() {
                 <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin mattis, erat at ultrices aliquam, turpis nisi rutrum erat, eu finibus felis nisl ultricies mi. Aliquam quis interdum dui. Vivamus mattis bibendum dolor, vel varius ante facilisi at. Maecenas molestie vestibulum…</p>
                 <div className="meta">
                   <span>Gillion, 9 years ago</span><span className="sep">|</span>
-                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>0</span><span className="sep">|</span>
-                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>2 min read</span><span className="sep">|</span>
-                  <svg className="icon m-icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>0</span><span className="sep">|</span>
+                  <span><svg className="icon m-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" /></svg>2 min read</span><span className="sep">|</span>
+                  <svg className="icon m-icon" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z" /></svg>
                 </div>
               </div>
               <a href="#" className="media lr-media">
@@ -1458,7 +1459,7 @@ export default function GillionHomepage() {
       <div className="foot-top">
         <div className="wrap">
           <div className="insta-title">
-            <svg className="icon" viewBox="0 0 24 24" style={{width: '16px', height: '16px', color: '#fff'}}><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+            <svg className="icon" viewBox="0 0 24 24" style={{ width: '16px', height: '16px', color: '#fff' }}><rect x="3" y="3" width="18" height="18" rx="4" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" /></svg>
             Instagram Feed
           </div>
 
@@ -1466,8 +1467,8 @@ export default function GillionHomepage() {
             {/* column 1: trending slider + subscribe */}
             <div>
               <div className="ft-nav-row">
-                <span className="foot-block-title" style={{margin: '0'}}>Trending Now</span>
-                <div style={{display: 'flex', gap: '6px'}}>
+                <span className="foot-block-title" style={{ margin: '0' }}>Trending Now</span>
+                <div style={{ display: 'flex', gap: '6px' }}>
                   <button className="arrow-btn" id="ftPrev">‹</button>
                   <button className="arrow-btn" id="ftNext">›</button>
                 </div>
@@ -1475,18 +1476,18 @@ export default function GillionHomepage() {
               <div className="ft-slider" id="ftSlider">
                 <div className="ft-track" id="ftTrack">
                   <div className="slide"><img src="https://images.pexels.com/photos/4534592/pexels-photo-4534592.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="" /><div className="shade"></div>
-                    <div className="cap"><span className="eyebrow">Review</span><div style={{fontSize: '13px', fontWeight: '700', marginTop: '6px'}}>Recent View On Things That Matter To Me The Most</div></div>
+                    <div className="cap"><span className="eyebrow">Review</span><div style={{ fontSize: '13px', fontWeight: '700', marginTop: '6px' }}>Recent View On Things That Matter To Me The Most</div></div>
                   </div>
                   <div className="slide"><img src="https://images.pexels.com/photos/30651300/pexels-photo-30651300.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="" /><div className="shade"></div>
-                    <div className="cap"><span className="eyebrow">Design</span><div style={{fontSize: '13px', fontWeight: '700', marginTop: '6px'}}>Stylish Trends That Could Happen Faster Than You Think</div></div>
+                    <div className="cap"><span className="eyebrow">Design</span><div style={{ fontSize: '13px', fontWeight: '700', marginTop: '6px' }}>Stylish Trends That Could Happen Faster Than You Think</div></div>
                   </div>
                   <div className="slide"><img src="https://images.pexels.com/photos/3989314/pexels-photo-3989314.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="" /><div className="shade"></div>
-                    <div className="cap"><span className="eyebrow">Style</span><div style={{fontSize: '13px', fontWeight: '700', marginTop: '6px'}}>Is Ombre Hair Style Is Out Of Fashion?</div></div>
+                    <div className="cap"><span className="eyebrow">Style</span><div style={{ fontSize: '13px', fontWeight: '700', marginTop: '6px' }}>Is Ombre Hair Style Is Out Of Fashion?</div></div>
                   </div>
                 </div>
               </div>
               <div className="foot-sub">
-                <span className="foot-block-title" style={{margin: '0'}}>Subscribe Now</span>
+                <span className="foot-block-title" style={{ margin: '0' }}>Subscribe Now</span>
                 <div className="foot-sub-row">
                   <input type="email" placeholder="Your email" />
                   <button className="btn solid">Subscribe</button>
@@ -1519,7 +1520,7 @@ export default function GillionHomepage() {
                   <div><h5>Is Ombre Hair Style Is Out Of Fashion?</h5><div className="meta">9 years ago · 2</div></div>
                 </div>
               </div>
-              <div id="ftPostsPopular" style={{display: 'none'}}>
+              <div id="ftPostsPopular" style={{ display: 'none' }}>
                 <div className="ft-post">
                   <img src="https://images.pexels.com/photos/6633296/pexels-photo-6633296.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="" />
                   <div><h5>Tips And Tricks How to Avoid Winter Depression</h5><div className="meta">9 years ago · 2</div></div>
@@ -1554,7 +1555,7 @@ export default function GillionHomepage() {
               </ul>
               <button className="show-more" id="showMoreCat">Show All</button>
 
-              <span className="foot-block-title" style={{marginTop: '44px', display: 'block'}}>Hot Tags</span>
+              <span className="foot-block-title" style={{ marginTop: '44px', display: 'block' }}>Hot Tags</span>
               <div className="tags">
                 <a href="#">#accessories</a><a href="#">#dress</a><a href="#">#4lifehack</a>
                 <a href="#">#lifestyle</a><a href="#">#motivation</a><a href="#">#style</a>
